@@ -58,6 +58,7 @@ dependencies {
     implementation(project(":switches"))
     implementation(project(":progressbars"))
     implementation(project(":radiobuttons"))
+    implementation(project(":chips"))
     implementation(project(":appbars"))
     implementation(project(":dividers"))
     implementation(project(":tabs"))
@@ -76,6 +77,6 @@ dependencies {
     implementation(AndroidX.activity.compose)
     implementation(AndroidX.navigation.compose)
     implementation(AndroidX.compose.ui.tooling)
-
+    implementation("io.coil-kt:coil-compose:2.0.0-rc01")
     implementation(Google.Accompanist.systemuicontroller)
 }
