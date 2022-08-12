@@ -9,7 +9,6 @@ import androidx.compose.ui.graphics.Color
 import com.decathlon.vitamin.compose.foundation.VitaminTheme
 import com.decathlon.vitamin.compose.foundation.VtmnStatesDisabled
 
-
 @Stable
 interface ChipColors {
     /**
@@ -38,7 +37,6 @@ interface ChipColors {
      */
     @Composable
     fun borderColor(selected: Boolean, enabled: Boolean): State<Color>
-
 }
 
 @Immutable
@@ -145,4 +143,3 @@ object VitaminChipColors {
         unSelectedDisabledBorderColor = unSelectedDisabledBorderColor
     )
 }
-

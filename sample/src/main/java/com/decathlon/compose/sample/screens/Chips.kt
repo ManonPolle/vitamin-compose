@@ -1,20 +1,33 @@
 package com.decathlon.compose.sample.screens
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
 import com.decathlon.compose.sample.R
 import com.decathlon.compose.sample.components.SampleScaffold
 import com.decathlon.vitamin.compose.chips.VitaminChipSizes
@@ -29,8 +42,7 @@ object Chips : Screen {
     override val navigationKey: String
         get() = "chips"
 
-    @ExperimentalMaterialApi
-    @ExperimentalFoundationApi
+    @OptIn(ExperimentalMaterialApi::class)
     @SuppressWarnings("LongMethod")
     @Composable
     override fun Screen() {
@@ -41,14 +53,14 @@ object Chips : Screen {
 
         SampleScaffold(title = name) {
             LazyColumn(modifier = Modifier.fillMaxSize()) {
-
                 // ACTION CHIPS
                 item {
                     Title(
                         modifier = Modifier.padding(16.dp),
                         title = "Action Chips",
                         defaultEnabled = actionChipsEnabled,
-                        onCheckedChanged = { actionChipsEnabled = it })
+                        onCheckedChanged = { actionChipsEnabled = it }
+                    )
                 }
                 item {
                     ActionRows(actionChipsEnabled)
@@ -60,7 +72,8 @@ object Chips : Screen {
                         modifier = Modifier.padding(16.dp),
                         title = "Filter Chips",
                         defaultEnabled = filterChipsEnabled,
-                        onCheckedChanged = { filterChipsEnabled = it })
+                        onCheckedChanged = { filterChipsEnabled = it }
+                    )
                 }
                 item {
                     FilterRows(filterChipsEnabled)
@@ -72,7 +85,8 @@ object Chips : Screen {
                         modifier = Modifier.padding(16.dp),
                         title = "Input Chips",
                         defaultEnabled = inputChipsEnabled,
-                        onCheckedChanged = { inputChipsEnabled = it })
+                        onCheckedChanged = { inputChipsEnabled = it }
+                    )
                 }
                 item {
                     InputRows(inputChipsEnabled)
@@ -85,7 +99,8 @@ object Chips : Screen {
                         modifier = Modifier.padding(16.dp),
                         title = "Single Choice Chips",
                         defaultEnabled = singleChoiceChipsEnabled,
-                        onCheckedChanged = { singleChoiceChipsEnabled = it })
+                        onCheckedChanged = { singleChoiceChipsEnabled = it }
+                    )
                 }
                 item {
                     SingleChoiceChips(singleChoiceChipsEnabled)
@@ -124,6 +139,7 @@ fun Title(
 }
 
 @ExperimentalMaterialApi
+@SuppressWarnings("LongMethod")
 @Composable
 private fun ActionRows(actionChipsEnabled: Boolean) {
     Column {
@@ -204,6 +220,7 @@ private fun ActionRows(actionChipsEnabled: Boolean) {
 }
 
 @ExperimentalMaterialApi
+@SuppressWarnings("LongMethod")
 @Composable
 private fun FilterRows(filterChipsEnabled: Boolean) {
     Column {
@@ -268,6 +285,7 @@ private fun FilterRows(filterChipsEnabled: Boolean) {
 }
 
 @ExperimentalMaterialApi
+@SuppressWarnings("LongMethod")
 @Composable
 private fun InputRows(inputChipsEnabled: Boolean) {
     Column {
@@ -336,32 +354,34 @@ private fun InputRows(inputChipsEnabled: Boolean) {
 
             var yogaSelected by remember { mutableStateOf(true) }
             VitaminChips.Input(
-                label = "Yoga style",
+                label = "España",
                 enabled = inputChipsEnabled,
                 selected = yogaSelected,
                 onClick = {
                     yogaSelected = !yogaSelected
                 },
                 startContent = {
-                    AsyncImage(
-                        modifier = Modifier.fillMaxHeight(),
-                        model = "https://contents.mediadecathlon.com/p1937276/k\$e9a811c0538462c2b4f81970c9eec7ff/sq/8556274.jpg?format=auto&f=50x50",
+                    Image(
+                        painter = painterResource(R.drawable.vtmn_flag_es),
+                        contentScale = ContentScale.Crop,
+                        alignment = Alignment.Center,
                         contentDescription = null
                     )
                 }
             )
             var boxingSelected by remember { mutableStateOf(false) }
             VitaminChips.Input(
-                label = "Boxing style",
+                label = "Belgium",
                 enabled = inputChipsEnabled,
                 selected = boxingSelected,
                 onClick = {
                     boxingSelected = !boxingSelected
                 },
                 startContent = {
-                    AsyncImage(
-                        modifier = Modifier.fillMaxHeight(),
-                        model = "https://contents.mediadecathlon.com/p2217587/k\$f50b5ce79665abfe176a9551427230e7/sq/GANTS+DE+BOXE+120+NOIRS+GANTS+D+ENTRAINEMENT.webp?f=50x50",
+                    Image(
+                        painter = painterResource(R.drawable.vtmn_flag_be),
+                        contentScale = ContentScale.Crop,
+                        alignment = Alignment.Center,
                         contentDescription = null
                     )
                 }
@@ -429,19 +449,16 @@ private fun InputClosableRows(inputChipsEnabled: Boolean) {
                 }
             )
 
-            displayedContacts.forEach {
+            displayedContacts.forEach { contact ->
                 VitaminChips.Input(
-                    label = it,
+                    label = contact,
                     selected = false,
                     enabled = inputChipsEnabled,
                     onClick = {
-                        //nothing
+                        displayedContacts.remove(contact)
                     },
-                    removeContent = {
-                        Close(
-                            onClick = { displayedContacts.remove(it) },
-                            contentDescription = "Remove"
-                        )
+                    endContent = {
+                        Close(contentDescription = "Remove")
                     }
                 )
             }

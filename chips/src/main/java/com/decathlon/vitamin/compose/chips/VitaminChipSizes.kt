@@ -2,6 +2,7 @@ package com.decathlon.vitamin.compose.chips
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
@@ -49,39 +50,59 @@ data class ChipSizes(
 object VitaminChipSizes {
     @Composable
     fun small(
-        fontSize: TextUnit = VitaminTheme.typography.body3.fontSize,
+        fontSize: TextUnit = VitaminTheme.typography.text3.fontSize,
         fontWeight: FontWeight = FontWeight.W700,
         iconSize: Dp = 20.dp,
         horizontalPadding: Dp = 10.dp,
         verticalPadding: Dp = 6.dp,
         innerSpacing: Dp = 8.dp,
         borderWidth: Dp = 1.dp
-    ) = ChipSizes(
-        fontSize = fontSize,
-        fontWeight = fontWeight,
-        iconSize = iconSize,
-        horizontalPadding = horizontalPadding,
-        verticalPadding = verticalPadding,
-        innerSpacing = innerSpacing,
-        borderWidth = borderWidth
-    )
+    ) = remember(
+        fontSize,
+        fontWeight,
+        iconSize,
+        horizontalPadding,
+        verticalPadding,
+        innerSpacing,
+        borderWidth
+    ) {
+        ChipSizes(
+            fontSize = fontSize,
+            fontWeight = fontWeight,
+            iconSize = iconSize,
+            horizontalPadding = horizontalPadding,
+            verticalPadding = verticalPadding,
+            innerSpacing = innerSpacing,
+            borderWidth = borderWidth
+        )
+    }
 
     @Composable
     fun medium(
-        fontSize: TextUnit = VitaminTheme.typography.body2.fontSize,
+        fontSize: TextUnit = VitaminTheme.typography.text2.fontSize,
         fontWeight: FontWeight = FontWeight.W700,
         iconSize: Dp = 20.dp,
         horizontalPadding: Dp = 10.dp,
         verticalPadding: Dp = 8.dp,
         innerSpacing: Dp = 8.dp,
         borderWidth: Dp = 1.dp
-    ) = ChipSizes(
-        fontSize = fontSize,
-        fontWeight = fontWeight,
-        iconSize = iconSize,
-        horizontalPadding = horizontalPadding,
-        verticalPadding = verticalPadding,
-        innerSpacing = innerSpacing,
-        borderWidth = borderWidth
-    )
+    ) = remember(
+        fontSize,
+        fontWeight,
+        iconSize,
+        horizontalPadding,
+        verticalPadding,
+        innerSpacing,
+        borderWidth
+    ) {
+        ChipSizes(
+            fontSize = fontSize,
+            fontWeight = fontWeight,
+            iconSize = iconSize,
+            horizontalPadding = horizontalPadding,
+            verticalPadding = verticalPadding,
+            innerSpacing = innerSpacing,
+            borderWidth = borderWidth
+        )
+    }
 }

@@ -77,6 +77,5 @@ dependencies {
     implementation(AndroidX.activity.compose)
     implementation(AndroidX.navigation.compose)
     implementation(AndroidX.compose.ui.tooling)
-    implementation("io.coil-kt:coil-compose:2.0.0-rc01")
     implementation(Google.Accompanist.systemuicontroller)
 }

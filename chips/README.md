@@ -1,6 +1,7 @@
 # Chip components
 
-Chips appear dynamically as a group of multiple interactive elements. With chips, users can filter content, enter information, make selections or trigger actions.
+Chips appear dynamically as a group of multiple interactive elements. With chips, users can filter
+content, enter information, make selections or trigger actions.
 
 ## Chip design specs
 
@@ -36,7 +37,7 @@ object VitaminChips {
 
 ```
 
-Action chip offers actions related to the content related to. 
+Action chip offers actions related to the content. 
 It appears dynamically and contextually in the interface.
 
 
@@ -127,7 +128,7 @@ object VitaminChips {
         modifier: Modifier = Modifier,
         enabled: Boolean = true,
         startContent: (@Composable () -> Unit)? = null,
-        removeContent: (@Composable VitaminChipButtons.() -> Unit)? = null,
+        endContent: (@Composable VitaminChipButtons.() -> Unit)? = null,
         colors: ChipColors = VitaminChipColors.default(),
         sizes: ChipSizes = VitaminChipSizes.medium(),
         ripple: RippleTheme = VitaminChipRipples.default()
@@ -143,7 +144,7 @@ An icon or an image can be used to give information about the kind of informatio
 VitaminChips.Input(
     label = "Walking",
     onClick = { selected -> 
-        // Callback to handle Chip state
+        // Callback to handle Chip state 
     },
     startContent = {
         Icon(
@@ -153,12 +154,8 @@ VitaminChips.Input(
             contentDescription = null
         )
     },
-    removeContent = {
-        Close(
-            onClick = { 
-                // Callback when endContent is clicked
-            }
-        )
+    endContent = {
+        Close()
     }
 )
 ```
@@ -171,7 +168,7 @@ Parameters | Descriptions
 `modifier: Modifier = Modifier` | `Modifier` to be applied to the component
 `enabled: Boolean = true` | True if you can click on the Chip, otherwise false
 `startContent: (@Composable () -> Unit)? = null` | Optional Content to be displayed before label into the Chip
-`removeContent: (@Composable VitaminChipButtons.() -> Unit)? = null` | Optional Content to be displayed after label into the Chip
+`endContent: (@Composable VitaminChipButtons.() -> Unit)? = null` | Optional Content to be displayed after label into the Chip
 `colors: ChipColors = VitaminChipColors.default()` | Colors to be applied to the Chip
 `sizes: ChipSizes = VitaminChipSizes.medium()` | Sizes to be applied to the Chip. (VitaminChipSizes.medium() | VitaminChipSizes.small())
 `ripple: RippleTheme` | The ripple effect to be applied to the Chip

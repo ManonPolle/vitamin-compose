@@ -1,12 +1,21 @@
 package com.decathlon.vitamin.compose.chips
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.*
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
+import androidx.compose.material.LocalContentAlpha
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.material.ripple.RippleTheme
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -15,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import com.decathlon.vitamin.compose.foundation.VitaminTheme
 import com.decathlon.vitamin.compose.foundation.VtmnStatesDisabled
 
 object VitaminChips {
@@ -42,7 +52,7 @@ object VitaminChips {
         enabled: Boolean = true,
         colors: ChipColors = VitaminChipColors.default(),
         sizes: ChipSizes = VitaminChipSizes.medium(),
-        ripple: RippleTheme = VitaminChipRipples.default() // todo VitaminTheme.ripples.brand
+        ripple: RippleTheme = VitaminTheme.ripples.brand
     ) {
         VitaminChipImpl(
             label = label,
@@ -81,7 +91,7 @@ object VitaminChips {
         enabled: Boolean = true,
         colors: ChipColors = VitaminChipColors.default(),
         sizes: ChipSizes = VitaminChipSizes.medium(),
-        ripple: RippleTheme = VitaminChipRipples.default() // todo VitaminTheme.ripples.brand
+        ripple: RippleTheme = VitaminTheme.ripples.brand
     ) {
         VitaminChipImpl(
             label = label,
@@ -107,7 +117,8 @@ object VitaminChips {
     }
 
     /**
-     * Input chips represent complex information used in fields or filters, like person, place, thing, attributes, or text.
+     * Input chips represent complex information used in fields or filters, like person, place,
+     * thing, attributes, or text.
      * An icon or an image can be used to give information about the kind of information.
      *
      * @param label Text to be displayed into the Chip
@@ -116,7 +127,7 @@ object VitaminChips {
      * @param `Modifier` to be applied to the component
      * @param enabled True if you can click on the Chip, otherwise false
      * @param startContent Optional Content to be displayed before label into the Chip
-     * @param removeContent Optional Content to be displayed after label into the Chip
+     * @param endContent Optional Content of VitaminChipButtons to be displayed after label into the Chip
      * @param colors Colors to be applied to the Chip
      * @param sizes Sizes to be applied to the Chip. (VitaminChipSizes.medium() | VitaminChipSizes.small())
      * @param ripple The ripple effect to be applied to the Chip
@@ -130,10 +141,10 @@ object VitaminChips {
         modifier: Modifier = Modifier,
         enabled: Boolean = true,
         startContent: (@Composable () -> Unit)? = null,
-        removeContent: (@Composable VitaminChipButtons.() -> Unit)? = null,
+        endContent: (@Composable VitaminChipButtons.() -> Unit)? = null,
         colors: ChipColors = VitaminChipColors.default(),
         sizes: ChipSizes = VitaminChipSizes.medium(),
-        ripple: RippleTheme = VitaminChipRipples.default() // todo VitaminTheme.ripples.brand
+        ripple: RippleTheme = VitaminTheme.ripples.brand
     ) {
         VitaminChipImpl(
             label = label,
@@ -142,7 +153,7 @@ object VitaminChips {
             modifier = modifier,
             enabled = enabled,
             startContent = startContent,
-            endContent = removeContent,
+            endContent = endContent,
             colors = colors,
             sizes = sizes,
             ripple = ripple
@@ -176,22 +187,13 @@ object VitaminChips {
         endContent: (@Composable VitaminChipButtons.() -> Unit)? = null,
         colors: ChipColors = VitaminChipColors.default(),
         sizes: ChipSizes = VitaminChipSizes.medium(),
-        ripple: RippleTheme = VitaminChipRipples.default() // todo VitaminTheme.ripples.brand
+        ripple: RippleTheme = VitaminTheme.ripples.brand
     ) {
-        val backgroundColor by colors.backgroundColor(
-            selected = selected,
-            enabled = enabled
-        )
-        val borderColor by colors.borderColor(
-            selected = selected,
-            enabled = enabled
-        )
+        val backgroundColor by colors.backgroundColor(selected = selected, enabled = enabled)
+        val borderColor by colors.borderColor(selected = selected, enabled = enabled)
         val border = BorderStroke(sizes.borderWidth, borderColor)
 
-        val contentColor = colors.contentColor(
-            selected = selected,
-            enabled = enabled
-        ).value
+        val contentColor = colors.contentColor(selected = selected, enabled = enabled).value
 
         CompositionLocalProvider(
             LocalRippleTheme provides ripple,
@@ -204,8 +206,7 @@ object VitaminChips {
                 contentColor = contentColor,
                 shape = CircleShape,
                 enabled = enabled,
-                onClick = onClick,
-                indication = rememberRipple()
+                onClick = onClick
             ) {
                 Row(
                     modifier = Modifier
@@ -253,4 +254,3 @@ object VitaminChips {
         }
     }
 }
-
