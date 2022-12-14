@@ -1,31 +1,12 @@
 package com.decathlon.vitamin.compose.chips
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Icon
-import androidx.compose.material.LocalContentAlpha
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.material.ripple.RippleTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.painterResource
+import com.decathlon.vitamin.compose.chips.impl.VitaminChipImpl
+import com.decathlon.vitamin.compose.chips.impl.VitaminFilterChipImpl
 import com.decathlon.vitamin.compose.foundation.VitaminTheme
-import com.decathlon.vitamin.compose.foundation.VtmnStatesDisabled
 
 object VitaminChips {
 
@@ -34,223 +15,167 @@ object VitaminChips {
      * It appears dynamically and contextually in the interface.
      *
      * @param label Text to be displayed into the Chip
-     * @param onClick Callback to be called when the action Chip is clicked
      * @param `Modifier` to be applied to the component
-     * @param startIcon Optional Content to be displayed before label into the Chip
      * @param enabled True if you can click on the Chip, otherwise false
      * @param colors Colors to be applied to the Chip
      * @param sizes Sizes to be applied to the Chip. (VitaminChipSizes.medium() | VitaminChipSizes.small())
      * @param ripple The ripple effect to be applied to the Chip
+     * @param onClick Callback to be called when the action Chip is clicked
+     * @param leadingIcon Optional Icon Content to be displayed before label into the Chip
      */
-    @ExperimentalMaterialApi
+
+    @OptIn(ExperimentalMaterialApi::class)
     @Composable
     fun Action(
         label: String,
+        modifier: Modifier = Modifier,
+        enabled: Boolean = true,
+        colors: VitaminChipColors = VitaminChipDefaults.default(),
+        sizes: ChipSizes = VitaminChipSizes.medium(),
+        ripple: RippleTheme = VitaminTheme.ripples.brand,
         onClick: () -> Unit,
-        modifier: Modifier = Modifier,
-        startIcon: (@Composable () -> Unit)? = null,
-        enabled: Boolean = true,
-        colors: ChipColors = VitaminChipColors.default(),
-        sizes: ChipSizes = VitaminChipSizes.medium(),
-        ripple: RippleTheme = VitaminTheme.ripples.brand
+        leadingIcon: (@Composable () -> Unit)? = null
     ) {
         VitaminChipImpl(
             label = label,
+            modifier = modifier,
+            enabled = enabled,
+            colors = colors,
+            sizes = sizes,
+            ripple = ripple,
             onClick = onClick,
-            selected = false,
-            modifier = modifier,
-            startContent = startIcon,
-            enabled = enabled,
-            colors = colors,
-            sizes = sizes,
-            ripple = ripple
+            leadingIcon = leadingIcon
         )
     }
 
-    /**
-     * Filter chips are used as filters for list or content.
-     * Multiple chips can be selected or unselected.
-     * A selected Filter Chip displays a tick as start content.
-     *
-     * @param label Text to be displayed into the Chip
-     * @param onClick Callback to be called when the action Chip is clicked
-     * @param selected True if the Chip is selected, otherwise false
-     * @param `Modifier` to be applied to the component
-     * @param enabled True if you can click on the Chip, otherwise false
-     * @param colors Colors to be applied to the Chip
-     * @param sizes Sizes to be applied to the Chip. (VitaminChipSizes.medium() | VitaminChipSizes.small())
-     * @param ripple The ripple effect to be applied to the Chip
-     */
-    @ExperimentalMaterialApi
-    @Composable
-    fun Filter(
-        label: String,
-        onClick: (Boolean) -> Unit,
-        selected: Boolean,
-        modifier: Modifier = Modifier,
-        enabled: Boolean = true,
-        colors: ChipColors = VitaminChipColors.default(),
-        sizes: ChipSizes = VitaminChipSizes.medium(),
-        ripple: RippleTheme = VitaminTheme.ripples.brand
-    ) {
-        VitaminChipImpl(
-            label = label,
-            onClick = { onClick(selected) },
-            selected = selected,
-            modifier = modifier,
-            enabled = enabled,
-            startContent = if (selected) {
-                {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_vtmn_check_line),
-                        contentDescription = null,
-                        modifier = Modifier.size(sizes.iconSize)
-                    )
-                }
-            } else {
-                null
-            },
-            colors = colors,
-            sizes = sizes,
-            ripple = ripple
-        )
-    }
-
-    /**
-     * Input chips represent complex information used in fields or filters, like person, place,
-     * thing, attributes, or text.
-     * An icon or an image can be used to give information about the kind of information.
-     *
-     * @param label Text to be displayed into the Chip
-     * @param onClick Callback to be called when the action Chip is clicked
-     * @param selected True if the Chip is selected, otherwise false
-     * @param `Modifier` to be applied to the component
-     * @param enabled True if you can click on the Chip, otherwise false
-     * @param startContent Optional Content to be displayed before label into the Chip
-     * @param endContent Optional Content of VitaminChipButtons to be displayed after label into the Chip
-     * @param colors Colors to be applied to the Chip
-     * @param sizes Sizes to be applied to the Chip. (VitaminChipSizes.medium() | VitaminChipSizes.small())
-     * @param ripple The ripple effect to be applied to the Chip
-     */
-    @ExperimentalMaterialApi
+    @OptIn(ExperimentalMaterialApi::class)
     @Composable
     fun Input(
         label: String,
-        onClick: (Boolean) -> Unit,
-        selected: Boolean,
         modifier: Modifier = Modifier,
         enabled: Boolean = true,
-        startContent: (@Composable () -> Unit)? = null,
-        endContent: (@Composable VitaminChipButtons.() -> Unit)? = null,
-        colors: ChipColors = VitaminChipColors.default(),
+        colors: VitaminSelectableChipColors = VitaminChipDefaults.selectable(),
         sizes: ChipSizes = VitaminChipSizes.medium(),
-        ripple: RippleTheme = VitaminTheme.ripples.brand
+        ripple: RippleTheme = VitaminTheme.ripples.brand,
+        onClick: () -> Unit,
+        trailingIcon: (@Composable () -> Unit) = { VitaminChipButtons.Close(contentDescription = null) }
     ) {
-        VitaminChipImpl(
+        VitaminFilterChipImpl(
             label = label,
-            onClick = { onClick(selected) },
-            selected = selected,
             modifier = modifier,
             enabled = enabled,
-            startContent = startContent,
-            endContent = endContent,
             colors = colors,
             sizes = sizes,
-            ripple = ripple
+            ripple = ripple,
+            onClick = onClick,
+            trailingIcon = trailingIcon
         )
     }
 
-    /**
-     * Chips appear dynamically as a group of multiple interactive elements.
-     * With chips, users can filter content, enter information, make selections or trigger actions.
-     *
-     * @param label Text to be displayed into the Chip
-     * @param onClick Callback to be called when the action Chip is clicked
-     * @param selected True if the Chip is selected, otherwise false
-     * @param `Modifier` to be applied to the component
-     * @param enabled True if you can click on the Chip, otherwise false
-     * @param startContent Optional Content to be displayed before label into the Chip
-     * @param endContent Optional Content to be displayed after label into the Chip
-     * @param colors Colors to be applied to the Chip
-     * @param sizes Sizes to be applied to the Chip. (VitaminChipSizes.medium() | VitaminChipSizes.small())
-     * @param ripple The ripple effect to be applied to the Chip
-     */
-    @ExperimentalMaterialApi
+    @OptIn(ExperimentalMaterialApi::class)
     @Composable
-    private fun VitaminChipImpl(
+    fun InputWithIcon(
         label: String,
-        onClick: () -> Unit,
-        selected: Boolean,
         modifier: Modifier = Modifier,
         enabled: Boolean = true,
-        startContent: (@Composable () -> Unit)? = null,
-        endContent: (@Composable VitaminChipButtons.() -> Unit)? = null,
-        colors: ChipColors = VitaminChipColors.default(),
+        colors: VitaminSelectableChipColors = VitaminChipDefaults.selectable(),
         sizes: ChipSizes = VitaminChipSizes.medium(),
-        ripple: RippleTheme = VitaminTheme.ripples.brand
+        ripple: RippleTheme = VitaminTheme.ripples.brand,
+        onClick: () -> Unit,
+        leadingIcon: (@Composable () -> Unit),
+        trailingIcon: (@Composable () -> Unit) = { VitaminChipButtons.Close(contentDescription = null) }
     ) {
-        val backgroundColor by colors.backgroundColor(selected = selected, enabled = enabled)
-        val borderColor by colors.borderColor(selected = selected, enabled = enabled)
-        val border = BorderStroke(sizes.borderWidth, borderColor)
+        VitaminFilterChipImpl(
+            label = label,
+            modifier = modifier,
+            enabled = enabled,
+            colors = colors,
+            sizes = sizes,
+            ripple = ripple,
+            onClick = onClick,
+            leadingIcon = leadingIcon,
+            trailingIcon = trailingIcon
+        )
+    }
 
-        val contentColor = colors.contentColor(selected = selected, enabled = enabled).value
+    @OptIn(ExperimentalMaterialApi::class)
+    @Composable
+    fun InputWithImage(
+        label: String,
+        modifier: Modifier = Modifier,
+        enabled: Boolean = true,
+        colors: VitaminSelectableChipColors = VitaminChipDefaults.selectable(),
+        sizes: ChipSizes = VitaminChipSizes.medium(),
+        ripple: RippleTheme = VitaminTheme.ripples.brand,
+        onClick: () -> Unit,
+        leadingContent: (@Composable () -> Unit),
+        trailingIcon: (@Composable () -> Unit) = { VitaminChipButtons.Close(contentDescription = null) }
+    ) {
+        VitaminFilterChipImpl(
+            label = label,
+            modifier = modifier,
+            enabled = enabled,
+            colors = colors,
+            sizes = sizes,
+            ripple = ripple,
+            onClick = onClick,
+            leadingContent = leadingContent,
+            trailingIcon = trailingIcon
+        )
+    }
 
-        CompositionLocalProvider(
-            LocalRippleTheme provides ripple,
-            LocalContentAlpha provides contentColor.alpha
-        ) {
-            Surface(
-                modifier = modifier,
-                border = border,
-                color = backgroundColor,
-                contentColor = contentColor,
-                shape = CircleShape,
-                enabled = enabled,
-                onClick = onClick
-            ) {
-                Row(
-                    modifier = Modifier
-                        .height(IntrinsicSize.Min)
-                        .wrapContentSize()
-                        .padding(
-                            top = sizes.verticalPadding,
-                            bottom = sizes.verticalPadding,
-                            start = sizes.horizontalPadding,
-                            end = sizes.horizontalPadding
-                        ),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    startContent?.let {
-                        Box(
-                            modifier = Modifier
-                                .size(sizes.iconSize)
-                                .alpha(if (enabled) 1F else VtmnStatesDisabled)
-                                .clip(shape = CircleShape)
-                        ) {
-                            startContent()
-                        }
-                    }
-                    Text(
-                        modifier = Modifier.padding(
-                            start = sizes.innerSpacing,
-                            end = sizes.innerSpacing
-                        ),
-                        text = label,
-                        color = contentColor,
-                        fontSize = sizes.fontSize,
-                        fontWeight = sizes.fontWeight,
-                        maxLines = 1
-                    )
-                    endContent?.let {
-                        Box(
-                            modifier = Modifier
-                                .size(sizes.iconSize)
-                        ) {
-                            VitaminChipButtons.endContent()
-                        }
-                    }
-                }
-            }
+    @OptIn(ExperimentalMaterialApi::class)
+    @Composable
+    fun Filter(
+        label: String,
+        modifier: Modifier = Modifier,
+        enabled: Boolean = true,
+        selected: Boolean = false,
+        colors: VitaminSelectableChipColors = VitaminChipDefaults.selectable(),
+        sizes: ChipSizes = VitaminChipSizes.medium(),
+        ripple: RippleTheme = VitaminTheme.ripples.brand,
+        onClick: () -> Unit,
+        selectedIcon: (@Composable () -> Unit) = { VitaminChipButtons.Selected() }
+    ) {
+        val leadingContent = if (selected) {
+            selectedIcon
+        } else {
+            null
         }
+        VitaminFilterChipImpl(
+            label = label,
+            modifier = modifier,
+            enabled = enabled,
+            selected = selected,
+            colors = colors,
+            sizes = sizes,
+            ripple = ripple,
+            onClick = onClick,
+            leadingIcon = leadingContent
+        )
+    }
+
+    @OptIn(ExperimentalMaterialApi::class)
+    @Composable
+    fun SingleChoice(
+        label: String,
+        modifier: Modifier = Modifier,
+        enabled: Boolean = true,
+        selected: Boolean = false,
+        colors: VitaminSelectableChipColors = VitaminChipDefaults.selectable(),
+        sizes: ChipSizes = VitaminChipSizes.medium(),
+        ripple: RippleTheme = VitaminTheme.ripples.brand,
+        onClick: () -> Unit
+    ) {
+        VitaminFilterChipImpl(
+            label = label,
+            modifier = modifier,
+            enabled = enabled,
+            selected = selected,
+            colors = colors,
+            sizes = sizes,
+            ripple = ripple,
+            onClick = onClick
+        )
     }
 }

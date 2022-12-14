@@ -1,6 +1,5 @@
 package com.decathlon.compose.sample.screens
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -30,6 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decathlon.compose.sample.R
 import com.decathlon.compose.sample.components.SampleScaffold
+import com.decathlon.vitamin.compose.chips.VitaminChipButtons.Close
 import com.decathlon.vitamin.compose.chips.VitaminChipSizes
 import com.decathlon.vitamin.compose.chips.VitaminChips
 import com.decathlon.vitamin.compose.foundation.VitaminTheme
@@ -90,7 +90,7 @@ object Chips : Screen {
                 }
                 item {
                     InputRows(inputChipsEnabled)
-                    InputClosableRows(inputChipsEnabled)
+                    InputRowsWithLeadingContent(inputChipsEnabled = inputChipsEnabled)
                 }
 
                 // SINGLE CHOICE CHIPS
@@ -138,7 +138,7 @@ fun Title(
     }
 }
 
-@ExperimentalMaterialApi
+//region action chips
 @SuppressWarnings("LongMethod")
 @Composable
 private fun ActionRows(actionChipsEnabled: Boolean) {
@@ -158,7 +158,7 @@ private fun ActionRows(actionChipsEnabled: Boolean) {
                 label = "Set a reminder",
                 enabled = actionChipsEnabled,
                 onClick = {},
-                startIcon = {
+                leadingIcon = {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_vtmn_calendar_line),
                         contentDescription = null
@@ -169,7 +169,7 @@ private fun ActionRows(actionChipsEnabled: Boolean) {
                 label = "Share",
                 enabled = actionChipsEnabled,
                 onClick = {},
-                startIcon = {
+                leadingIcon = {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_vtmn_share_line),
                         contentDescription = null
@@ -178,6 +178,10 @@ private fun ActionRows(actionChipsEnabled: Boolean) {
             )
             Spacer(modifier = Modifier.width(16.dp))
         }
+        Text(
+            modifier = Modifier.padding(start = 16.dp),
+            text = "-"
+        )
         Row(
             modifier = Modifier.padding(top = 8.dp, bottom = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -195,7 +199,7 @@ private fun ActionRows(actionChipsEnabled: Boolean) {
                 enabled = actionChipsEnabled,
                 onClick = {},
                 sizes = VitaminChipSizes.small(),
-                startIcon = {
+                leadingIcon = {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_vtmn_calendar_line),
                         contentDescription = null
@@ -207,7 +211,7 @@ private fun ActionRows(actionChipsEnabled: Boolean) {
                 enabled = actionChipsEnabled,
                 onClick = {},
                 sizes = VitaminChipSizes.small(),
-                startIcon = {
+                leadingIcon = {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_vtmn_share_line),
                         contentDescription = null
@@ -219,7 +223,9 @@ private fun ActionRows(actionChipsEnabled: Boolean) {
     }
 }
 
-@ExperimentalMaterialApi
+//endregion action chips
+
+//region filter chips
 @SuppressWarnings("LongMethod")
 @Composable
 private fun FilterRows(filterChipsEnabled: Boolean) {
@@ -241,8 +247,8 @@ private fun FilterRows(filterChipsEnabled: Boolean) {
                     label = it,
                     enabled = filterChipsEnabled,
                     selected = selected,
-                    onClick = { isSelected ->
-                        if (isSelected) {
+                    onClick = {
+                        if (selected) {
                             selectedFilters.remove(it)
                         } else {
                             selectedFilters.add(it)
@@ -270,8 +276,8 @@ private fun FilterRows(filterChipsEnabled: Boolean) {
                     enabled = filterChipsEnabled,
                     selected = selected,
                     sizes = VitaminChipSizes.small(),
-                    onClick = { isSelected ->
-                        if (isSelected) {
+                    onClick = {
+                        if (selected) {
                             selectedFilters.remove(it)
                         } else {
                             selectedFilters.add(it)
@@ -284,10 +290,11 @@ private fun FilterRows(filterChipsEnabled: Boolean) {
     }
 }
 
-@ExperimentalMaterialApi
+//endregion filter chips
+
 @SuppressWarnings("LongMethod")
 @Composable
-private fun InputRows(inputChipsEnabled: Boolean) {
+private fun InputRowsWithLeadingContent(inputChipsEnabled: Boolean) {
     Column {
         Row(
             modifier = Modifier
@@ -298,24 +305,26 @@ private fun InputRows(inputChipsEnabled: Boolean) {
         ) {
             Spacer(modifier = Modifier.width(16.dp))
 
-            var neutralSelected by remember { mutableStateOf(true) }
-            VitaminChips.Input(
+            VitaminChips.InputWithIcon(
                 label = "Never mind",
                 enabled = inputChipsEnabled,
-                selected = neutralSelected,
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(
+                            id = R.drawable.ic_vtmn_earth_line
+                        ),
+                        contentDescription = null
+                    )
+                },
                 onClick = {
-                    neutralSelected = !neutralSelected
                 }
             )
-            var drivingSelected by remember { mutableStateOf(false) }
-            VitaminChips.Input(
+            VitaminChips.InputWithIcon(
                 label = "Driving",
                 enabled = inputChipsEnabled,
-                selected = drivingSelected,
                 onClick = {
-                    drivingSelected = !drivingSelected
                 },
-                startContent = {
+                leadingIcon = {
                     Icon(
                         painter = painterResource(
                             id = R.drawable.ic_vtmn_car_line
@@ -324,15 +333,12 @@ private fun InputRows(inputChipsEnabled: Boolean) {
                     )
                 }
             )
-            var walkingSelected by remember { mutableStateOf(true) }
-            VitaminChips.Input(
+            VitaminChips.InputWithIcon(
                 label = "Walking",
                 enabled = inputChipsEnabled,
-                selected = walkingSelected,
                 onClick = {
-                    walkingSelected = !walkingSelected
                 },
-                startContent = {
+                leadingIcon = {
                     Icon(
                         painter = painterResource(
                             id = R.drawable.ic_vtmn_walk_line
@@ -352,15 +358,12 @@ private fun InputRows(inputChipsEnabled: Boolean) {
         ) {
             Spacer(modifier = Modifier.width(16.dp))
 
-            var yogaSelected by remember { mutableStateOf(true) }
-            VitaminChips.Input(
+            VitaminChips.InputWithImage(
                 label = "España",
                 enabled = inputChipsEnabled,
-                selected = yogaSelected,
                 onClick = {
-                    yogaSelected = !yogaSelected
                 },
-                startContent = {
+                leadingContent = {
                     Image(
                         painter = painterResource(R.drawable.vtmn_flag_es),
                         contentScale = ContentScale.Crop,
@@ -369,15 +372,12 @@ private fun InputRows(inputChipsEnabled: Boolean) {
                     )
                 }
             )
-            var boxingSelected by remember { mutableStateOf(false) }
-            VitaminChips.Input(
+            VitaminChips.InputWithImage(
                 label = "Belgium",
                 enabled = inputChipsEnabled,
-                selected = boxingSelected,
                 onClick = {
-                    boxingSelected = !boxingSelected
                 },
-                startContent = {
+                leadingContent = {
                     Image(
                         painter = painterResource(R.drawable.vtmn_flag_be),
                         contentScale = ContentScale.Crop,
@@ -388,6 +388,10 @@ private fun InputRows(inputChipsEnabled: Boolean) {
             )
             Spacer(modifier = Modifier.width(16.dp))
         }
+        Text(
+            modifier = Modifier.padding(start = 16.dp),
+            text = "-"
+        )
         Row(
             modifier = Modifier
                 .padding(top = 8.dp, bottom = 8.dp)
@@ -403,14 +407,11 @@ private fun InputRows(inputChipsEnabled: Boolean) {
                 "Mountain hiking",
                 "Fast hiking"
             ).forEach { value ->
-                var selected by remember { mutableStateOf(false) }
                 VitaminChips.Input(
                     label = value,
                     enabled = inputChipsEnabled,
-                    selected = selected,
                     sizes = VitaminChipSizes.small(),
                     onClick = {
-                        selected = !selected
                     }
                 )
             }
@@ -419,9 +420,8 @@ private fun InputRows(inputChipsEnabled: Boolean) {
     }
 }
 
-@ExperimentalMaterialApi
 @Composable
-private fun InputClosableRows(inputChipsEnabled: Boolean) {
+private fun InputRows(inputChipsEnabled: Boolean) {
     Column(modifier = Modifier.padding(top = 16.dp)) {
         Row(
             modifier = Modifier
@@ -441,7 +441,7 @@ private fun InputClosableRows(inputChipsEnabled: Boolean) {
                     displayedContacts.clear()
                     displayedContacts.addAll(listOf("John", "Alice", "Helen", "Charles"))
                 },
-                startIcon = {
+                leadingIcon = {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_vtmn_refresh_line),
                         contentDescription = null
@@ -452,13 +452,12 @@ private fun InputClosableRows(inputChipsEnabled: Boolean) {
             displayedContacts.forEach { contact ->
                 VitaminChips.Input(
                     label = contact,
-                    selected = false,
                     enabled = inputChipsEnabled,
                     onClick = {
                         displayedContacts.remove(contact)
                     },
-                    endContent = {
-                        Close(contentDescription = "Remove")
+                    trailingIcon = {
+                        Close()
                     }
                 )
             }
@@ -467,7 +466,6 @@ private fun InputClosableRows(inputChipsEnabled: Boolean) {
     }
 }
 
-@ExperimentalMaterialApi
 @Composable
 private fun SingleChoiceChips(singleChoiceEnabled: Boolean) {
     Row(
@@ -481,7 +479,7 @@ private fun SingleChoiceChips(singleChoiceEnabled: Boolean) {
 
         var selected by remember { mutableStateOf("Medium") }
         listOf("Easy", "Medium", "Hard", "Expert").forEach { value ->
-            VitaminChips.Input(
+            VitaminChips.SingleChoice(
                 label = value,
                 enabled = singleChoiceEnabled,
                 selected = value == selected,
@@ -504,7 +502,7 @@ private fun SingleChoiceChips(singleChoiceEnabled: Boolean) {
 
         var smallSelected by remember { mutableStateOf("Hard") }
         listOf("Easy", "Medium", "Hard", "Expert").forEach { value ->
-            VitaminChips.Input(
+            VitaminChips.SingleChoice(
                 label = value,
                 enabled = singleChoiceEnabled,
                 selected = value == smallSelected,
@@ -519,8 +517,6 @@ private fun SingleChoiceChips(singleChoiceEnabled: Boolean) {
     }
 }
 
-@ExperimentalFoundationApi
-@ExperimentalMaterialApi
 @Preview(showBackground = true)
 @Composable
 fun ChipsPreview() {

@@ -27,9 +27,9 @@ data class ChipSizes(
     val iconSize: Dp,
 
     /**
-     * Horizontal spacing (start & end padding) inside a [VitaminChips].
+     * Size of the spacing between an icon and a text when they used inside a [VitaminChips].
      */
-    val horizontalPadding: Dp,
+    val innerSpacing: Dp,
 
     /**
      * Vertical spacing (top & bottom padding) inside a [VitaminChips].
@@ -37,9 +37,14 @@ data class ChipSizes(
     val verticalPadding: Dp,
 
     /**
-     * Size of the spacing between an icon and a text when they used inside a [VitaminChips].
+     * Horizontal spacing for the text (start & end padding) inside a [VitaminChips].
      */
-    val innerSpacing: Dp,
+    val horizontalPadding: Dp,
+
+    /**
+     * Horizontal spacing for icons (start & end padding) inside a [VitaminChips].
+     */
+    val horizontalIconPadding: Dp,
 
     /**
      * Width of the [VitaminChips].
@@ -47,32 +52,48 @@ data class ChipSizes(
     val borderWidth: Dp
 )
 
+private val MaterialHorizontalPadding = 12.dp
+private val MaterialLeadingIconStartSpacing = 4.dp
+private val MaterialTrailingIconSpacing = 4.dp
+
+fun ChipSizes.horizontalSpacing() =
+    this.horizontalPadding - MaterialHorizontalPadding
+
+fun ChipSizes.leadingIconStartSpacing() =
+    this.horizontalIconPadding - MaterialLeadingIconStartSpacing
+
+fun ChipSizes.trailingIconSpacing() =
+    this.horizontalIconPadding - MaterialTrailingIconSpacing
+
 object VitaminChipSizes {
     @Composable
     fun small(
         fontSize: TextUnit = VitaminTheme.typography.text3.fontSize,
         fontWeight: FontWeight = FontWeight.W700,
         iconSize: Dp = 20.dp,
-        horizontalPadding: Dp = 10.dp,
-        verticalPadding: Dp = 6.dp,
         innerSpacing: Dp = 8.dp,
+        verticalPadding: Dp = 6.dp,
+        horizontalPadding: Dp = 12.dp,
+        horizontalIconPadding: Dp = 8.dp,
         borderWidth: Dp = 1.dp
     ) = remember(
         fontSize,
         fontWeight,
         iconSize,
-        horizontalPadding,
-        verticalPadding,
         innerSpacing,
+        verticalPadding,
+        horizontalPadding,
+        horizontalIconPadding,
         borderWidth
     ) {
         ChipSizes(
             fontSize = fontSize,
             fontWeight = fontWeight,
             iconSize = iconSize,
-            horizontalPadding = horizontalPadding,
-            verticalPadding = verticalPadding,
             innerSpacing = innerSpacing,
+            verticalPadding = verticalPadding,
+            horizontalPadding = horizontalPadding,
+            horizontalIconPadding = horizontalIconPadding,
             borderWidth = borderWidth
         )
     }
@@ -82,26 +103,29 @@ object VitaminChipSizes {
         fontSize: TextUnit = VitaminTheme.typography.text2.fontSize,
         fontWeight: FontWeight = FontWeight.W700,
         iconSize: Dp = 20.dp,
-        horizontalPadding: Dp = 10.dp,
-        verticalPadding: Dp = 8.dp,
         innerSpacing: Dp = 8.dp,
+        verticalPadding: Dp = 8.dp,
+        horizontalPadding: Dp = 16.dp,
+        horizontalIconPadding: Dp = 10.dp,
         borderWidth: Dp = 1.dp
     ) = remember(
         fontSize,
         fontWeight,
         iconSize,
-        horizontalPadding,
         verticalPadding,
         innerSpacing,
+        horizontalPadding,
+        horizontalIconPadding,
         borderWidth
     ) {
         ChipSizes(
             fontSize = fontSize,
             fontWeight = fontWeight,
             iconSize = iconSize,
-            horizontalPadding = horizontalPadding,
-            verticalPadding = verticalPadding,
             innerSpacing = innerSpacing,
+            verticalPadding = verticalPadding,
+            horizontalPadding = horizontalPadding,
+            horizontalIconPadding = horizontalIconPadding,
             borderWidth = borderWidth
         )
     }

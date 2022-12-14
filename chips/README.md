@@ -13,7 +13,7 @@ If you want to use components of this module in your android mobile application,
 first add the Gradle dependency in your Gradle file:
 
 ```kotlin
-implementation("com.decathlon.vitamin.compose:chip:<versions>")
+implementation("com.decathlon.vitamin.compose:chips:<versions>")
 ```
 
 ### Action
@@ -25,13 +25,13 @@ object VitaminChips {
     @Composable
     fun Action(
         label: String,
-        onClick: () -> Unit,
         modifier: Modifier = Modifier,
-        startIcon: (@Composable () -> Unit)? = null,
         enabled: Boolean = true,
         colors: ChipColors = VitaminChipColors.default(),
         sizes: ChipSizes = VitaminChipSizes.medium(),
-        ripples: RippleTheme = VitaminChipRipples.default()
+        ripples: RippleTheme = VitaminChipRipples.default(),
+        onClick: () -> Unit,
+        startIcon: (@Composable () -> Unit)? = null
     )
 }
 
@@ -44,27 +44,27 @@ It appears dynamically and contextually in the interface.
 ```kotlin
 VitaminChips.Action(
     label = "Share",
+    enabled = actionChipsEnabled,
     onClick = {},
     startIcon = {
         Icon(
             painter = painterResource(id = R.drawable.ic_vtmn_share_line),
             contentDescription = null
         )
-    },
-    enabled = actionChipsEnabled
+    }
 )
 ```
 
 Parameters | Descriptions
 -- | --
 `label: String` | Text to be displayed into the Chip
-`onClick: (() -> Unit)?` | Callback to be called when the action Chip is clicked
 `modifier: Modifier = Modifier` | `Modifier` to be applied to the component
-`startIcon: (@Composable () -> Unit)? = null` | Optional Content to be displayed before label into the Chip
 `enabled: Boolean = true` | True if you can click on the Chip, otherwise false
 `colors: ChipColors = VitaminChipColors.default()` | Colors to be applied to the Chip
 `sizes: ChipSizes = VitaminChipSizes.medium()` | Sizes to be applied to the Chip. (VitaminChipSizes.medium() | VitaminChipSizes.small())
 `ripples: RippleTheme` | The ripple effect to be applied to the Chip
+`onClick: (() -> Unit)?` | Callback to be called when the action Chip is clicked
+`startIcon: (@Composable () -> Unit)? = null` | Optional Content to be displayed before label into the Chip
 
 ### Filter Chip
 
@@ -75,13 +75,13 @@ object VitaminChips {
     @Composable
     fun Filter(
         label: String,
-        onClick: (Boolean) -> Unit,
         selected: Boolean,
         modifier: Modifier = Modifier,
         enabled: Boolean = true,
         colors: ChipColors = VitaminChipColors.default(),
         sizes: ChipSizes = VitaminChipSizes.medium(),
-        ripples: RippleTheme = VitaminChipRipples.default()
+        ripples: RippleTheme = VitaminChipRipples.default(),
+        onClick: (Boolean) -> Unit
     )
 }
 
@@ -94,24 +94,24 @@ A selected Filter Chip displays a tick as start content.
 ```kotlin
 VitaminChips.Filter(
     label = "Climbing",
+    selected = true,
+    sizes = VitaminChipSizes.small(),
     onClick = { isSelected ->
         // callback to change Chip state
-    },
-    selected = true,
-    sizes = VitaminChipSizes.small()
+    }
 )
 ```
 
 Parameters | Descriptions
 -- | --
 `label: String` | Text to be displayed into the Chip
-`onClick: (() -> Unit)?` | Callback to be called when the action Chip is clicked
 `selected: Boolean,` | True if the Chip is selected, otherwise false
 `modifier: Modifier = Modifier` | `Modifier` to be applied to the component
 `enabled: Boolean = true` | True if you can click on the Chip, otherwise false
 `colors: ChipColors = VitaminChipColors.default()` | Colors to be applied to the Chip
 `sizes: ChipSizes = VitaminChipSizes.medium()` | Sizes to be applied to the Chip. (VitaminChipSizes.medium() | VitaminChipSizes.small())
 `ripples: RippleTheme` | The ripple effect to be applied to the Chip
+`onClick: (() -> Unit)?` | Callback to be called when the action Chip is clicked
 
 
 ### Input Chip
@@ -123,15 +123,15 @@ object VitaminChips {
     @Composable
     fun Input(
         label: String,
-        onClick: (Boolean) -> Unit,
         selected: Boolean,
         modifier: Modifier = Modifier,
         enabled: Boolean = true,
-        startContent: (@Composable () -> Unit)? = null,
-        endContent: (@Composable VitaminChipButtons.() -> Unit)? = null,
         colors: ChipColors = VitaminChipColors.default(),
         sizes: ChipSizes = VitaminChipSizes.medium(),
-        ripple: RippleTheme = VitaminChipRipples.default()
+        ripple: RippleTheme = VitaminChipRipples.default(),
+        onClick: (Boolean) -> Unit,
+        startContent: (@Composable () -> Unit)? = null,
+        endContent: (@Composable VitaminChipButtons.() -> Unit)? = null
     )
 }
 
@@ -143,7 +143,7 @@ An icon or an image can be used to give information about the kind of informatio
 ```kotlin
 VitaminChips.Input(
     label = "Walking",
-    onClick = { selected -> 
+    onClick = { selected ->
         // Callback to handle Chip state 
     },
     startContent = {
@@ -163,15 +163,15 @@ VitaminChips.Input(
 Parameters | Descriptions
 -- | --
 `label: String` | Text to be displayed into the Chip
-`onClick: (() -> Unit)?` | Callback to be called when the action Chip is clicked
 `selected: Boolean,` | True if the Chip is selected, otherwise false
 `modifier: Modifier = Modifier` | `Modifier` to be applied to the component
 `enabled: Boolean = true` | True if you can click on the Chip, otherwise false
-`startContent: (@Composable () -> Unit)? = null` | Optional Content to be displayed before label into the Chip
-`endContent: (@Composable VitaminChipButtons.() -> Unit)? = null` | Optional Content to be displayed after label into the Chip
 `colors: ChipColors = VitaminChipColors.default()` | Colors to be applied to the Chip
 `sizes: ChipSizes = VitaminChipSizes.medium()` | Sizes to be applied to the Chip. (VitaminChipSizes.medium() | VitaminChipSizes.small())
 `ripple: RippleTheme` | The ripple effect to be applied to the Chip
+`onClick: (() -> Unit)?` | Callback to be called when the action Chip is clicked
+`startContent: (@Composable () -> Unit)? = null` | Optional Content to be displayed before label into the Chip
+`endContent: (@Composable VitaminChipButtons.() -> Unit)? = null` | Optional Content to be displayed after label into the Chip
 
 ### Single Choice Chip
 
@@ -189,12 +189,12 @@ VitaminChips.Input(
 Parameters | Descriptions
 -- | --
 `label: String` | Text to be displayed into the Chip
-`onClick: (() -> Unit)?` | Callback to be called when the action Chip is clicked
 `selected: Boolean,` | True if the Chip is selected, otherwise false
 `modifier: Modifier = Modifier` | `Modifier` to be applied to the component
 `enabled: Boolean = true` | True if you can click on the Chip, otherwise false
-`startContent: (@Composable () -> Unit)? = null` | Optional Content to be displayed before label into the Chip
-`removeContent: (@Composable VitaminChipButtons.() -> Unit)? = null` | Optional Content to be displayed after label into the Chip
 `colors: ChipColors = VitaminChipColors.default()` | Colors to be applied to the Chip
 `sizes: ChipSizes = VitaminChipSizes.medium()` | Sizes to be applied to the Chip. (VitaminChipSizes.medium() | VitaminChipSizes.small())
 `ripple: RippleTheme` | The ripple effect to be applied to the Chip
+`onClick: (() -> Unit)?` | Callback to be called when the action Chip is clicked
+`startContent: (@Composable () -> Unit)? = null` | Optional Content to be displayed before label into the Chip
+`endContent: (@Composable VitaminChipButtons.() -> Unit)? = null` | Optional Content to be displayed after label into the Chip

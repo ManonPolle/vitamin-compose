@@ -8,12 +8,24 @@ import androidx.compose.ui.res.painterResource
 object VitaminChipButtons {
     @Composable
     fun Close(
-        contentDescription: String?,
         modifier: Modifier = Modifier,
+        contentDescription: String? = null,
     ) {
         Icon(
             modifier = modifier,
             painter = painterResource(R.drawable.ic_vtmn_close_line),
+            contentDescription = contentDescription
+        )
+    }
+
+    @Composable
+    fun Selected(
+        modifier: Modifier = Modifier,
+        contentDescription: String? = null,
+    ) {
+        Icon(
+            modifier = modifier,
+            painter = painterResource(R.drawable.ic_vtmn_check_line),
             contentDescription = contentDescription
         )
     }

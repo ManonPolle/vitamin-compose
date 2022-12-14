@@ -1,145 +1,213 @@
 package com.decathlon.vitamin.compose.chips
 
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.material.ChipColors
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.SelectableChipColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.Stable
 import androidx.compose.runtime.State
 import androidx.compose.ui.graphics.Color
 import com.decathlon.vitamin.compose.foundation.VitaminTheme
 import com.decathlon.vitamin.compose.foundation.VtmnStatesDisabled
 
-@Stable
-interface ChipColors {
-    /**
-     * Represents the background color for this chip, depending on [selected] & [enabled].
-     *
-     * @param selected whether the chip is selected
-     * @param enabled whether the chip is enabled
-     */
-    @Composable
-    fun backgroundColor(selected: Boolean, enabled: Boolean): State<Color>
-
-    /**
-     * Represents the content color for this chip, depending on [selected] & [enabled].
-     *
-     * @param selected whether the chip is selected
-     * @param enabled whether the chip is enabled
-     */
-    @Composable
-    fun contentColor(selected: Boolean, enabled: Boolean): State<Color>
-
+@OptIn(ExperimentalMaterialApi::class)
+interface VitaminSelectableChipColors : SelectableChipColors {
     /**
      * Represents the border color for this chip, depending on [selected] & [enabled].
-     *
+     * @param enabled whether the chip is enabled
      * @param selected whether the chip is selected
+     */
+    @Composable
+    fun borderColor(enabled: Boolean, selected: Boolean): State<Color>
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+interface VitaminChipColors : ChipColors {
+    /**
+     * Represents the border color for this chip, depending on if [enabled].
      * @param enabled whether the chip is enabled
      */
     @Composable
-    fun borderColor(selected: Boolean, enabled: Boolean): State<Color>
+    fun borderColor(enabled: Boolean): State<Color>
 }
 
 @Immutable
-private data class DefaultChipColors(
-    private val selectedContentColor: Color,
-    private val unSelectedContentColor: Color,
-    private val selectedDisabledContentColor: Color,
-    private val unSelectedDisabledContentColor: Color,
+private class VitaminDefaultSelectableChipColors(
+    private val backgroundColor: Color,
+    private val contentColor: Color,
+    private val borderColor: Color,
+
+    private val disabledBackgroundColor: Color,
+    private val disabledContentColor: Color,
+    private val disabledBorderColor: Color,
 
     private val selectedBackgroundColor: Color,
-    private val unSelectedBackgroundColor: Color,
-    private val selectedDisabledBackgroundColor: Color,
-    private val unSelectedDisabledBackgroundColor: Color,
-
+    private val selectedContentColor: Color,
     private val selectedBorderColor: Color,
-    private val unSelectedBorderColor: Color,
-    private val selectedDisabledBorderColor: Color,
-    private val unSelectedDisabledBorderColor: Color
-) : ChipColors {
+
+    private val disabledSelectedBackgroundColor: Color,
+    private val disabledSelectedContentColor: Color,
+    private val disabledSelectedBorderColor: Color
+) : VitaminSelectableChipColors {
 
     @Composable
-    override fun backgroundColor(selected: Boolean, enabled: Boolean): State<Color> {
+    override fun backgroundColor(enabled: Boolean, selected: Boolean): State<Color> {
         return animateColorAsState(
             when {
-                selected && enabled -> selectedBackgroundColor
-                selected && !enabled -> selectedDisabledBackgroundColor
-                !selected && enabled -> unSelectedBackgroundColor
-                else -> unSelectedDisabledBackgroundColor
+                enabled && !selected -> backgroundColor
+                enabled && selected -> selectedBackgroundColor
+                !selected -> disabledBackgroundColor
+                else -> disabledSelectedBackgroundColor
             }
         )
     }
 
     @Composable
-    override fun contentColor(selected: Boolean, enabled: Boolean): State<Color> {
+    override fun contentColor(enabled: Boolean, selected: Boolean): State<Color> {
         return animateColorAsState(
             when {
-                selected && enabled -> selectedContentColor
-                selected && !enabled -> selectedDisabledContentColor
-                !selected && enabled -> unSelectedContentColor
-                else -> unSelectedDisabledContentColor
+                enabled && !selected -> contentColor
+                enabled && selected -> selectedContentColor
+                !selected -> disabledContentColor
+                else -> disabledSelectedContentColor
             }
         )
     }
 
     @Composable
-    override fun borderColor(selected: Boolean, enabled: Boolean): State<Color> {
+    override fun leadingIconColor(enabled: Boolean, selected: Boolean): State<Color> {
+        return contentColor(enabled = enabled, selected = selected)
+    }
+
+    @Composable
+    override fun borderColor(enabled: Boolean, selected: Boolean): State<Color> {
         return animateColorAsState(
             when {
-                selected && enabled -> selectedBorderColor
-                selected && !enabled -> selectedDisabledBorderColor
-                !selected && enabled -> unSelectedBorderColor
-                else -> unSelectedDisabledBorderColor
+                enabled && !selected -> borderColor
+                enabled && selected -> selectedBorderColor
+                !selected -> disabledBorderColor
+                else -> disabledSelectedBorderColor
             }
         )
     }
 }
 
-object VitaminChipColors {
+@Immutable
+private class VitaminDefaultChipColors(
+    private val backgroundColor: Color,
+    private val contentColor: Color,
+    private val borderColor: Color,
+
+    private val disabledBackgroundColor: Color,
+    private val disabledContentColor: Color,
+    private val disabledBorderColor: Color
+) : VitaminChipColors {
+    @Composable
+    override fun contentColor(enabled: Boolean): State<Color> {
+        return animateColorAsState(
+            if (enabled) contentColor else disabledContentColor
+        )
+    }
+
+    @Composable
+    override fun backgroundColor(enabled: Boolean): State<Color> {
+        return animateColorAsState(
+            if (enabled) backgroundColor else disabledBackgroundColor
+        )
+    }
+
+    @Composable
+    override fun leadingIconContentColor(enabled: Boolean): State<Color> {
+        return animateColorAsState(
+            if (enabled) contentColor else disabledContentColor
+        )
+    }
+
+    @Composable
+    override fun borderColor(enabled: Boolean): State<Color> {
+        return animateColorAsState(
+            if (enabled) borderColor else disabledBorderColor
+        )
+    }
+}
+
+object VitaminChipDefaults {
     /**
-     * Creates a [ChipColors] that represents the default background and content colors used in
+     * Creates a [VitaminChipColors] that represents the default background and content colors used in
      * a [VitaminChips].
      *
-     * @param selectedContentColor the content color of this [VitaminChips] when selected & enabled
-     * @param selectedBackgroundColor the background color of this [VitaminChips] when selected & enabled
-     * @param unSelectedContentColor the content color of this [VitaminChips] when not selected & enabled
-     * @param unSelectedBackgroundColor the background color of this [VitaminChips] when not selected & enabled
-     * @param unSelectedBorderColor the border color of this [VitaminChips] when not selected & enabled
-     * @param selectedDisabledContentColor the content color of this [VitaminChips] when selected & disabled
-     * @param selectedDisabledBackgroundColor the background color of this [VitaminChips] when selected & disabled
-     * @param unSelectedDisabledContentColor the content color of this [VitaminChips] when not selected & disabled
-     * @param unSelectedDisabledBackgroundColor the background color of this [VitaminChips] when not selected & disabled
-     * @param unSelectedDisabledBorderColor the border color of this [VitaminChips] when not selected & disabled
+     * @param contentColor the content color of this [VitaminChips] when enabled (not selected)
+     * @param backgroundColor the background color of this [VitaminChips] when enabled (not selected)
+     * @param borderColor the border color of this [VitaminChips] when enabled (not selected)
+     * @param disabledContentColor the content color of this [VitaminChips] when not enabled (not selected)
+     * @param disabledBackgroundColor the background color of this [VitaminChips] when not enabled (not selected)
+     * @param disabledBorderColor the border color of this [VitaminChips] when not enabled (not selected)
      */
     @Composable
     fun default(
+        contentColor: Color = VitaminTheme.colors.vtmnContentAction,
+        backgroundColor: Color = VitaminTheme.colors.vtmnBackgroundPrimary,
+        borderColor: Color = VitaminTheme.colors.vtmnBorderInactive,
+
+        disabledContentColor: Color = contentColor.copy(alpha = VtmnStatesDisabled),
+        disabledBackgroundColor: Color = backgroundColor.copy(alpha = VtmnStatesDisabled),
+        disabledBorderColor: Color = borderColor.copy(alpha = VtmnStatesDisabled)
+    ): VitaminChipColors = VitaminDefaultChipColors(
+        contentColor = contentColor,
+        backgroundColor = backgroundColor,
+        borderColor = borderColor,
+        disabledContentColor = disabledContentColor,
+        disabledBackgroundColor = disabledBackgroundColor,
+        disabledBorderColor = disabledBorderColor
+    )
+
+    /**
+     * Creates a [VitaminSelectableChipColors] that represents the default background and content colors used in
+     * a [VitaminChips] that is selectable.
+     *
+     * @param contentColor the content color of this [VitaminChips] when enabled (not selected)
+     * @param backgroundColor the background color of this [VitaminChips] when enabled (not selected)
+     * @param borderColor the border color of this [VitaminChips] when enabled (not selected)
+     * @param selectedContentColor the content color of this [VitaminChips] when enabled & selected
+     * @param selectedBackgroundColor the background color of this [VitaminChips] when enabled & selected
+     * @param selectedBorderColor the border color of this [VitaminChips] when enabled & selected
+     * @param disabledContentColor the content color of this [VitaminChips] when not enabled (not selected)
+     * @param disabledBackgroundColor the background color of this [VitaminChips] when not enabled (not selected)
+     * @param disabledBorderColor the border color of this [VitaminChips] when not enabled (not selected)
+     * @param disabledSelectedContentColor the content color of this [VitaminChips] when not enabled & selected
+     * @param disabledSelectedBackgroundColor the background color of this [VitaminChips] when not enabled & selected
+     * @param disabledSelectedBorderColor the border color of this [VitaminChips] when not enabled & selected
+     */
+    @Composable
+    fun selectable(
+        contentColor: Color = VitaminTheme.colors.vtmnContentAction,
+        backgroundColor: Color = VitaminTheme.colors.vtmnBackgroundPrimary,
+        borderColor: Color = VitaminTheme.colors.vtmnBorderInactive,
+
         selectedContentColor: Color = VitaminTheme.colors.vtmnContentPrimaryReversed,
-        unSelectedContentColor: Color = VitaminTheme.colors.vtmnContentAction,
-        selectedDisabledContentColor: Color = VitaminTheme.colors.vtmnContentPrimaryReversed,
-        unSelectedDisabledContentColor: Color = unSelectedContentColor.copy(alpha = VtmnStatesDisabled),
-
         selectedBackgroundColor: Color = VitaminTheme.colors.vtmnBackgroundBrandPrimary,
-        unSelectedBackgroundColor: Color = VitaminTheme.colors.vtmnBackgroundPrimary,
-        selectedDisabledBackgroundColor: Color = selectedBackgroundColor.copy(alpha = VtmnStatesDisabled),
-        unSelectedDisabledBackgroundColor: Color = unSelectedBackgroundColor.copy(alpha = VtmnStatesDisabled),
-
         selectedBorderColor: Color = Color.Transparent,
-        unSelectedBorderColor: Color = VitaminTheme.colors.vtmnBorderInactive,
-        selectedDisabledBorderColor: Color = Color.Transparent,
-        unSelectedDisabledBorderColor: Color = unSelectedBorderColor.copy(alpha = VtmnStatesDisabled)
-    ): ChipColors = DefaultChipColors(
+
+        disabledContentColor: Color = contentColor.copy(alpha = VtmnStatesDisabled),
+        disabledBackgroundColor: Color = backgroundColor.copy(alpha = VtmnStatesDisabled),
+        disabledBorderColor: Color = borderColor.copy(alpha = VtmnStatesDisabled),
+
+        disabledSelectedContentColor: Color = VitaminTheme.colors.vtmnContentPrimaryReversed,
+        disabledSelectedBackgroundColor: Color = selectedBackgroundColor.copy(alpha = VtmnStatesDisabled),
+        disabledSelectedBorderColor: Color = Color.Transparent
+    ): VitaminSelectableChipColors = VitaminDefaultSelectableChipColors(
+        contentColor = contentColor,
+        backgroundColor = backgroundColor,
+        borderColor = borderColor,
         selectedContentColor = selectedContentColor,
-        unSelectedContentColor = unSelectedContentColor,
-        selectedDisabledContentColor = selectedDisabledContentColor,
-        unSelectedDisabledContentColor = unSelectedDisabledContentColor,
-
         selectedBackgroundColor = selectedBackgroundColor,
-        unSelectedBackgroundColor = unSelectedBackgroundColor,
-        selectedDisabledBackgroundColor = selectedDisabledBackgroundColor,
-        unSelectedDisabledBackgroundColor = unSelectedDisabledBackgroundColor,
-
         selectedBorderColor = selectedBorderColor,
-        unSelectedBorderColor = unSelectedBorderColor,
-        selectedDisabledBorderColor = selectedDisabledBorderColor,
-        unSelectedDisabledBorderColor = unSelectedDisabledBorderColor
+        disabledContentColor = disabledContentColor,
+        disabledBackgroundColor = disabledBackgroundColor,
+        disabledBorderColor = disabledBorderColor,
+        disabledSelectedContentColor = disabledSelectedContentColor,
+        disabledSelectedBackgroundColor = disabledSelectedBackgroundColor,
+        disabledSelectedBorderColor = disabledSelectedBorderColor
     )
 }
