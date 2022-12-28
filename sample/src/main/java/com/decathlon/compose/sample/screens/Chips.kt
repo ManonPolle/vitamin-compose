@@ -21,6 +21,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -29,11 +30,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.decathlon.compose.sample.R
 import com.decathlon.compose.sample.components.SampleScaffold
+import com.decathlon.vitamin.compose.chips.ChipSizes
 import com.decathlon.vitamin.compose.chips.VitaminChipButtons.Close
 import com.decathlon.vitamin.compose.chips.VitaminChipSizes
 import com.decathlon.vitamin.compose.chips.VitaminChips
 import com.decathlon.vitamin.compose.foundation.VitaminTheme
-import com.decathlon.vitamin.compose.switches.VitaminSwitches
 
 object Chips : Screen {
     override val name: String
@@ -46,64 +47,38 @@ object Chips : Screen {
     @SuppressWarnings("LongMethod")
     @Composable
     override fun Screen() {
-        var actionChipsEnabled by remember { mutableStateOf(true) }
-        var filterChipsEnabled by remember { mutableStateOf(true) }
-        var inputChipsEnabled by remember { mutableStateOf(true) }
-        var singleChoiceChipsEnabled by remember { mutableStateOf(true) }
-
         SampleScaffold(title = name) {
             LazyColumn(modifier = Modifier.fillMaxSize()) {
                 // ACTION CHIPS
                 item {
-                    Title(
-                        modifier = Modifier.padding(16.dp),
-                        title = "Action Chips",
-                        defaultEnabled = actionChipsEnabled,
-                        onCheckedChanged = { actionChipsEnabled = it }
-                    )
+                    Title(title = "Action Chips")
                 }
                 item {
-                    ActionRows(actionChipsEnabled)
+                    ActionColumn()
                 }
 
                 // FILTER CHIPS
                 item {
-                    Title(
-                        modifier = Modifier.padding(16.dp),
-                        title = "Filter Chips",
-                        defaultEnabled = filterChipsEnabled,
-                        onCheckedChanged = { filterChipsEnabled = it }
-                    )
+                    Title(title = "Filter Chips")
                 }
                 item {
-                    FilterRows(filterChipsEnabled)
+                    FilterColumn()
                 }
 
                 // INPUT CHIPS
                 item {
-                    Title(
-                        modifier = Modifier.padding(16.dp),
-                        title = "Input Chips",
-                        defaultEnabled = inputChipsEnabled,
-                        onCheckedChanged = { inputChipsEnabled = it }
-                    )
+                    Title(title = "Input Chips")
                 }
                 item {
-                    InputRows(inputChipsEnabled)
-                    InputRowsWithLeadingContent(inputChipsEnabled = inputChipsEnabled)
+                    InputColumn()
                 }
 
                 // SINGLE CHOICE CHIPS
                 item {
-                    Title(
-                        modifier = Modifier.padding(16.dp),
-                        title = "Single Choice Chips",
-                        defaultEnabled = singleChoiceChipsEnabled,
-                        onCheckedChanged = { singleChoiceChipsEnabled = it }
-                    )
+                    Title(title = "Single Choice Chips")
                 }
                 item {
-                    SingleChoiceChips(singleChoiceChipsEnabled)
+                    SingleChoiceChips()
                 }
 
                 item {
@@ -115,331 +90,304 @@ object Chips : Screen {
 }
 
 @Composable
-fun Title(
+private fun Title(
     title: String,
-    defaultEnabled: Boolean,
-    onCheckedChanged: (Boolean) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier.padding(start = 16.dp, top = 16.dp)
 ) {
-    Row(
+    Text(
         modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        Text(
-            text = title,
-            style = VitaminTheme.typography.h6
-        )
-        VitaminSwitches.Primary(
-            checked = defaultEnabled,
-            onCheckedChange = onCheckedChanged
-        )
-        Text(text = "enabled")
-    }
+        text = title,
+        style = VitaminTheme.typography.h6
+    )
+}
+
+@Composable
+private fun MediumSubTitle(
+    modifier: Modifier = Modifier.padding(start = 16.dp)
+) {
+    Text(
+        modifier = modifier,
+        text = "Medium",
+        style = VitaminTheme.typography.subtitle1
+    )
+}
+
+@Composable
+private fun SmallSubTitle(
+    modifier: Modifier = Modifier.padding(start = 16.dp)
+) {
+    Text(
+        modifier = modifier,
+        text = "Small",
+        style = VitaminTheme.typography.subtitle1
+    )
 }
 
 //region action chips
-@SuppressWarnings("LongMethod")
 @Composable
-private fun ActionRows(actionChipsEnabled: Boolean) {
-    Column {
-        Row(
-            modifier = Modifier.padding(top = 8.dp, bottom = 8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Spacer(modifier = Modifier.width(16.dp))
-            VitaminChips.Action(
-                label = "Select",
-                onClick = {},
-                enabled = actionChipsEnabled,
-            )
-            VitaminChips.Action(
-                label = "Set a reminder",
-                enabled = actionChipsEnabled,
-                onClick = {},
-                leadingIcon = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_vtmn_calendar_line),
-                        contentDescription = null
-                    )
-                }
-            )
-            VitaminChips.Action(
-                label = "Share",
-                enabled = actionChipsEnabled,
-                onClick = {},
-                leadingIcon = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_vtmn_share_line),
-                        contentDescription = null
-                    )
-                }
-            )
-            Spacer(modifier = Modifier.width(16.dp))
-        }
-        Text(
-            modifier = Modifier.padding(start = 16.dp),
-            text = "-"
-        )
-        Row(
-            modifier = Modifier.padding(top = 8.dp, bottom = 8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Spacer(modifier = Modifier.width(16.dp))
-            VitaminChips.Action(
-                label = "Select",
-                onClick = {},
-                enabled = actionChipsEnabled,
-                sizes = VitaminChipSizes.small()
-            )
-            VitaminChips.Action(
-                label = "Set a reminder",
-                enabled = actionChipsEnabled,
-                onClick = {},
-                sizes = VitaminChipSizes.small(),
-                leadingIcon = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_vtmn_calendar_line),
-                        contentDescription = null
-                    )
-                }
-            )
-            VitaminChips.Action(
-                label = "Share",
-                enabled = actionChipsEnabled,
-                onClick = {},
-                sizes = VitaminChipSizes.small(),
-                leadingIcon = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_vtmn_share_line),
-                        contentDescription = null
-                    )
-                }
-            )
-            Spacer(modifier = Modifier.width(16.dp))
-        }
-    }
+private fun ActionColumn() {
+    MediumSubTitle()
+    ActionRow(enabled = true, sizes = VitaminChipSizes.medium())
+    ActionRow(enabled = false, sizes = VitaminChipSizes.medium())
+
+    SmallSubTitle()
+    ActionRow(enabled = true, sizes = VitaminChipSizes.small())
+    ActionRow(enabled = false, sizes = VitaminChipSizes.small())
+
 }
 
+@Composable
+private fun ActionRow(enabled: Boolean, sizes: ChipSizes) {
+    Row(
+        modifier = Modifier.padding(top = 8.dp, bottom = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Spacer(modifier = Modifier.width(16.dp))
+        VitaminChips.Action(
+            label = "Select",
+            enabled = enabled,
+            sizes = sizes,
+            onClick = {}
+        )
+        VitaminChips.Action(
+            label = "Set a reminder",
+            enabled = enabled,
+            sizes = sizes,
+            onClick = {},
+            leadingIcon = {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_vtmn_calendar_line),
+                    contentDescription = null
+                )
+            }
+        )
+        VitaminChips.Action(
+            label = "Share",
+            enabled = enabled,
+            sizes = sizes,
+            onClick = {},
+            leadingIcon = {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_vtmn_share_line),
+                    contentDescription = null
+                )
+            }
+        )
+        Spacer(modifier = Modifier.width(16.dp))
+    }
+}
 //endregion action chips
 
 //region filter chips
-@SuppressWarnings("LongMethod")
 @Composable
-private fun FilterRows(filterChipsEnabled: Boolean) {
-    Column {
-        Row(
-            modifier = Modifier
-                .padding(top = 8.dp, bottom = 8.dp)
-                .horizontalScroll(rememberScrollState()),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            val filters = listOf("Basket", "Climbing", "Badminton", "Football")
-            val selectedFilters =
-                remember { mutableStateListOf("Climbing", "Badminton") }
-            Spacer(modifier = Modifier.width(16.dp))
-            filters.forEach {
-                val selected = selectedFilters.contains(it)
-                VitaminChips.Filter(
-                    label = it,
-                    enabled = filterChipsEnabled,
-                    selected = selected,
-                    onClick = {
-                        if (selected) {
-                            selectedFilters.remove(it)
-                        } else {
-                            selectedFilters.add(it)
-                        }
-                    }
-                )
-            }
-            Spacer(modifier = Modifier.width(16.dp))
-        }
-        Row(
-            modifier = Modifier
-                .padding(top = 8.dp, bottom = 8.dp)
-                .horizontalScroll(rememberScrollState()),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            val filters = listOf("Basket", "Climbing", "Badminton", "Football")
-            val selectedFilters =
-                remember { mutableStateListOf("Climbing", "Badminton") }
-            Spacer(modifier = Modifier.width(16.dp))
-            filters.forEach {
-                val selected = selectedFilters.contains(it)
-                VitaminChips.Filter(
-                    label = it,
-                    enabled = filterChipsEnabled,
-                    selected = selected,
-                    sizes = VitaminChipSizes.small(),
-                    onClick = {
-                        if (selected) {
-                            selectedFilters.remove(it)
-                        } else {
-                            selectedFilters.add(it)
-                        }
-                    }
-                )
-            }
-            Spacer(modifier = Modifier.width(16.dp))
-        }
-    }
+private fun FilterColumn() {
+    MediumSubTitle()
+    val selectedMediumFilters =
+        remember { mutableStateListOf("Climbing", "Badminton") }
+    FilterRaw(enabled = true, sizes = VitaminChipSizes.medium(), selectedMediumFilters)
+    FilterRaw(enabled = false, sizes = VitaminChipSizes.medium())
+
+    SmallSubTitle()
+    val selectedSmallFilters =
+        remember { mutableStateListOf("Climbing", "Badminton") }
+    FilterRaw(enabled = true, sizes = VitaminChipSizes.small(), selectedSmallFilters)
+    FilterRaw(enabled = false, sizes = VitaminChipSizes.small())
 }
 
+@Composable
+private fun FilterRaw(
+    enabled: Boolean,
+    sizes: ChipSizes,
+    selectedFilters: SnapshotStateList<String> = SnapshotStateList()
+) {
+    Row(
+        modifier = Modifier
+            .padding(top = 8.dp, bottom = 8.dp)
+            .horizontalScroll(rememberScrollState()),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        val filters = listOf("Basket", "Climbing", "Badminton", "Football")
+        Spacer(modifier = Modifier.width(16.dp))
+        filters.forEach {
+            val selected = selectedFilters.contains(it)
+            VitaminChips.Filter(
+                label = it,
+                enabled = enabled,
+                selected = selected,
+                sizes = sizes,
+                onClick = {
+                    if (selected) {
+                        selectedFilters.remove(it)
+                    } else {
+                        selectedFilters.add(it)
+                    }
+                }
+            )
+        }
+        Spacer(modifier = Modifier.width(16.dp))
+    }
+}
 //endregion filter chips
 
-@SuppressWarnings("LongMethod")
+//region input chips
 @Composable
-private fun InputRowsWithLeadingContent(inputChipsEnabled: Boolean) {
-    Column {
-        Row(
-            modifier = Modifier
-                .padding(top = 8.dp, bottom = 8.dp)
-                .horizontalScroll(rememberScrollState()),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Spacer(modifier = Modifier.width(16.dp))
+private fun InputColumn() {
+    MediumSubTitle()
+    val displayedContacts =
+        remember { mutableStateListOf("John", "Alice", "Helen", "Charles") }
+    val disabledDisplayedContacts =
+        remember { mutableStateListOf("John", "Alice", "Helen", "Charles") }
+    InputRows(enabled = true, sizes = VitaminChipSizes.medium(), displayedContacts)
+    InputRows(enabled = false, sizes = VitaminChipSizes.medium(), disabledDisplayedContacts)
 
-            VitaminChips.InputWithIcon(
-                label = "Never mind",
-                enabled = inputChipsEnabled,
-                leadingIcon = {
-                    Icon(
-                        painter = painterResource(
-                            id = R.drawable.ic_vtmn_earth_line
-                        ),
-                        contentDescription = null
-                    )
-                },
-                onClick = {
-                }
-            )
-            VitaminChips.InputWithIcon(
-                label = "Driving",
-                enabled = inputChipsEnabled,
-                onClick = {
-                },
-                leadingIcon = {
-                    Icon(
-                        painter = painterResource(
-                            id = R.drawable.ic_vtmn_car_line
-                        ),
-                        contentDescription = null
-                    )
-                }
-            )
-            VitaminChips.InputWithIcon(
-                label = "Walking",
-                enabled = inputChipsEnabled,
-                onClick = {
-                },
-                leadingIcon = {
-                    Icon(
-                        painter = painterResource(
-                            id = R.drawable.ic_vtmn_walk_line
-                        ),
-                        contentDescription = null
-                    )
-                }
-            )
-            Spacer(modifier = Modifier.width(16.dp))
-        }
-        Row(
-            modifier = Modifier
-                .padding(top = 8.dp, bottom = 8.dp)
-                .horizontalScroll(rememberScrollState()),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Spacer(modifier = Modifier.width(16.dp))
+    InputRowsWithLeadingIcon(true, VitaminChipSizes.medium())
+    InputRowsWithLeadingIcon(false, VitaminChipSizes.medium())
 
-            VitaminChips.InputWithImage(
-                label = "España",
-                enabled = inputChipsEnabled,
-                onClick = {
-                },
-                leadingContent = {
-                    Image(
-                        painter = painterResource(R.drawable.vtmn_flag_es),
-                        contentScale = ContentScale.Crop,
-                        alignment = Alignment.Center,
-                        contentDescription = null
-                    )
-                }
-            )
-            VitaminChips.InputWithImage(
-                label = "Belgium",
-                enabled = inputChipsEnabled,
-                onClick = {
-                },
-                leadingContent = {
-                    Image(
-                        painter = painterResource(R.drawable.vtmn_flag_be),
-                        contentScale = ContentScale.Crop,
-                        alignment = Alignment.Center,
-                        contentDescription = null
-                    )
-                }
-            )
-            Spacer(modifier = Modifier.width(16.dp))
-        }
-        Text(
-            modifier = Modifier.padding(start = 16.dp),
-            text = "-"
-        )
-        Row(
-            modifier = Modifier
-                .padding(top = 8.dp, bottom = 8.dp)
-                .horizontalScroll(rememberScrollState()),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Spacer(modifier = Modifier.width(16.dp))
+    InputRowsWithLeadingImage(true, VitaminChipSizes.medium())
+    InputRowsWithLeadingImage(false, VitaminChipSizes.medium())
 
-            listOf(
-                "Nature hiking",
-                "Snow hiking",
-                "Mountain hiking",
-                "Fast hiking"
-            ).forEach { value ->
-                VitaminChips.Input(
-                    label = value,
-                    enabled = inputChipsEnabled,
-                    sizes = VitaminChipSizes.small(),
-                    onClick = {
-                    }
+    SmallSubTitle()
+    val displayedContactsSmall =
+        remember { mutableStateListOf("John", "Alice", "Helen", "Charles") }
+    InputRows(enabled = true, sizes = VitaminChipSizes.small(), displayedContactsSmall)
+    InputRows(enabled = false, sizes = VitaminChipSizes.small(), disabledDisplayedContacts)
+
+    InputRowsWithLeadingIcon(true, VitaminChipSizes.small())
+    InputRowsWithLeadingIcon(false, VitaminChipSizes.small())
+
+    InputRowsWithLeadingImage(true, VitaminChipSizes.small())
+    InputRowsWithLeadingImage(false, VitaminChipSizes.small())
+}
+
+@Composable
+private fun InputRowsWithLeadingImage(enabled: Boolean, sizes: ChipSizes) {
+    Row(
+        modifier = Modifier
+            .padding(top = 8.dp, bottom = 8.dp)
+            .horizontalScroll(rememberScrollState()),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Spacer(modifier = Modifier.width(16.dp))
+
+        VitaminChips.InputWithImage(
+            label = "España",
+            enabled = enabled,
+            sizes = sizes,
+            onClick = {
+            },
+            leadingContent = {
+                Image(
+                    painter = painterResource(R.drawable.vtmn_flag_es),
+                    contentScale = ContentScale.Crop,
+                    alignment = Alignment.Center,
+                    contentDescription = null
                 )
             }
-            Spacer(modifier = Modifier.width(16.dp))
-        }
+        )
+        VitaminChips.InputWithImage(
+            label = "Belgium",
+            enabled = enabled,
+            sizes = sizes,
+            onClick = {
+            },
+            leadingContent = {
+                Image(
+                    painter = painterResource(R.drawable.vtmn_flag_be),
+                    contentScale = ContentScale.Crop,
+                    alignment = Alignment.Center,
+                    contentDescription = null
+                )
+            }
+        )
+        Spacer(modifier = Modifier.width(16.dp))
     }
 }
 
 @Composable
-private fun InputRows(inputChipsEnabled: Boolean) {
-    Column(modifier = Modifier.padding(top = 16.dp)) {
-        Row(
-            modifier = Modifier
-                .padding(top = 8.dp, bottom = 8.dp)
-                .horizontalScroll(rememberScrollState()),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Spacer(modifier = Modifier.width(16.dp))
+private fun InputRowsWithLeadingIcon(enabled: Boolean, sizes: ChipSizes) {
+    Row(
+        modifier = Modifier
+            .padding(top = 8.dp, bottom = 8.dp)
+            .horizontalScroll(rememberScrollState()),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Spacer(modifier = Modifier.width(16.dp))
 
-            val displayedContacts =
-                remember { mutableStateListOf("John", "Alice", "Helen", "Charles") }
+        VitaminChips.InputWithIcon(
+            label = "Never mind",
+            enabled = enabled,
+            sizes = sizes,
+            leadingIcon = {
+                Icon(
+                    painter = painterResource(
+                        id = R.drawable.ic_vtmn_earth_line
+                    ),
+                    contentDescription = null
+                )
+            },
+            onClick = {
+            }
+        )
+        VitaminChips.InputWithIcon(
+            label = "Driving",
+            enabled = enabled,
+            sizes = sizes,
+            onClick = {
+            },
+            leadingIcon = {
+                Icon(
+                    painter = painterResource(
+                        id = R.drawable.ic_vtmn_car_line
+                    ),
+                    contentDescription = null
+                )
+            }
+        )
+        VitaminChips.InputWithIcon(
+            label = "Walking",
+            enabled = enabled,
+            sizes = sizes,
+            onClick = {
+            },
+            leadingIcon = {
+                Icon(
+                    painter = painterResource(
+                        id = R.drawable.ic_vtmn_walk_line
+                    ),
+                    contentDescription = null
+                )
+            }
+        )
+        Spacer(modifier = Modifier.width(16.dp))
+    }
+}
+
+@Composable
+private fun InputRows(
+    enabled: Boolean,
+    sizes: ChipSizes,
+    displayedChips: SnapshotStateList<String> = SnapshotStateList()
+) {
+    Row(
+        modifier = Modifier
+            .padding(top = 8.dp, bottom = 8.dp)
+            .horizontalScroll(rememberScrollState()),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Spacer(modifier = Modifier.width(16.dp))
+        if (enabled) {
             VitaminChips.Action(
                 label = "Re fill",
-                enabled = inputChipsEnabled,
+                enabled = enabled,
+                sizes = sizes,
                 onClick = {
-                    displayedContacts.clear()
-                    displayedContacts.addAll(listOf("John", "Alice", "Helen", "Charles"))
+                    displayedChips.clear()
+                    displayedChips.addAll(listOf("John", "Alice", "Helen", "Charles"))
                 },
                 leadingIcon = {
                     Icon(
@@ -448,26 +396,30 @@ private fun InputRows(inputChipsEnabled: Boolean) {
                     )
                 }
             )
-
-            displayedContacts.forEach { contact ->
-                VitaminChips.Input(
-                    label = contact,
-                    enabled = inputChipsEnabled,
-                    onClick = {
-                        displayedContacts.remove(contact)
-                    },
-                    trailingIcon = {
-                        Close()
-                    }
-                )
-            }
-            Spacer(modifier = Modifier.width(16.dp))
         }
+
+        displayedChips.forEach { contact ->
+            VitaminChips.Input(
+                label = contact,
+                enabled = enabled,
+                sizes = sizes,
+                onClick = {
+                    displayedChips.remove(contact)
+                },
+                trailingIcon = {
+                    Close()
+                }
+            )
+        }
+        Spacer(modifier = Modifier.width(16.dp))
     }
 }
+//endregion input chips
 
+//region single choice chips
 @Composable
-private fun SingleChoiceChips(singleChoiceEnabled: Boolean) {
+private fun SingleChoiceChips() {
+    MediumSubTitle()
     Row(
         modifier = Modifier
             .padding(top = 8.dp, bottom = 8.dp)
@@ -481,7 +433,7 @@ private fun SingleChoiceChips(singleChoiceEnabled: Boolean) {
         listOf("Easy", "Medium", "Hard", "Expert").forEach { value ->
             VitaminChips.SingleChoice(
                 label = value,
-                enabled = singleChoiceEnabled,
+                enabled = value != "Easy",
                 selected = value == selected,
                 onClick = {
                     selected = value
@@ -491,6 +443,8 @@ private fun SingleChoiceChips(singleChoiceEnabled: Boolean) {
 
         Spacer(modifier = Modifier.width(16.dp))
     }
+
+    SmallSubTitle()
     Row(
         modifier = Modifier
             .padding(top = 8.dp, bottom = 8.dp)
@@ -500,11 +454,11 @@ private fun SingleChoiceChips(singleChoiceEnabled: Boolean) {
     ) {
         Spacer(modifier = Modifier.width(16.dp))
 
-        var smallSelected by remember { mutableStateOf("Hard") }
+        var smallSelected by remember { mutableStateOf("Expert") }
         listOf("Easy", "Medium", "Hard", "Expert").forEach { value ->
             VitaminChips.SingleChoice(
                 label = value,
-                enabled = singleChoiceEnabled,
+                enabled = value != "Hard",
                 selected = value == smallSelected,
                 sizes = VitaminChipSizes.small(),
                 onClick = {
@@ -516,6 +470,7 @@ private fun SingleChoiceChips(singleChoiceEnabled: Boolean) {
         Spacer(modifier = Modifier.width(16.dp))
     }
 }
+//endregion single choice chips
 
 @Preview(showBackground = true)
 @Composable

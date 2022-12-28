@@ -1,6 +1,7 @@
 package com.decathlon.vitamin.compose.chips.impl
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -19,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import com.decathlon.vitamin.compose.chips.ChipSizes
+import com.decathlon.vitamin.compose.chips.NoRippleInteractionSource
 import com.decathlon.vitamin.compose.chips.VitaminChipDefaults
 import com.decathlon.vitamin.compose.chips.VitaminChipSizes
 import com.decathlon.vitamin.compose.chips.VitaminSelectableChipColors
@@ -80,6 +82,11 @@ internal fun VitaminFilterChipImpl(
             colors = colors,
             enabled = enabled,
             selected = selected,
+            interactionSource = if (enabled) {
+                MutableInteractionSource()
+            } else {
+                NoRippleInteractionSource()
+            },
             leadingIcon = {
                 leadingIcon?.let {
                     Box(
@@ -115,7 +122,11 @@ internal fun VitaminFilterChipImpl(
                     }
                 }
             },
-            onClick = onClick
+            onClick = {
+                if (enabled) {
+                    onClick()
+                }
+            }
         )
     }
 }
