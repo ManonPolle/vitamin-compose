@@ -1,11 +1,8 @@
 package com.decathlon.vitamin.compose.chips
 
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ripple.RippleTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.decathlon.vitamin.compose.chips.impl.VitaminChipImpl
-import com.decathlon.vitamin.compose.chips.impl.VitaminFilterChipImpl
 import com.decathlon.vitamin.compose.foundation.VitaminTheme
 
 object VitaminChips {
@@ -24,7 +21,6 @@ object VitaminChips {
      * @param leadingIcon Optional Icon Content to be displayed before label into the Chip
      */
 
-    @OptIn(ExperimentalMaterialApi::class)
     @Composable
     fun Action(
         label: String,
@@ -48,7 +44,6 @@ object VitaminChips {
         )
     }
 
-    @OptIn(ExperimentalMaterialApi::class)
     @Composable
     fun Input(
         label: String,
@@ -72,7 +67,6 @@ object VitaminChips {
         )
     }
 
-    @OptIn(ExperimentalMaterialApi::class)
     @Composable
     fun InputWithIcon(
         label: String,
@@ -98,7 +92,6 @@ object VitaminChips {
         )
     }
 
-    @OptIn(ExperimentalMaterialApi::class)
     @Composable
     fun InputWithImage(
         label: String,
@@ -124,7 +117,6 @@ object VitaminChips {
         )
     }
 
-    @OptIn(ExperimentalMaterialApi::class)
     @Composable
     fun Filter(
         label: String,
@@ -155,7 +147,6 @@ object VitaminChips {
         )
     }
 
-    @OptIn(ExperimentalMaterialApi::class)
     @Composable
     fun SingleChoice(
         label: String,

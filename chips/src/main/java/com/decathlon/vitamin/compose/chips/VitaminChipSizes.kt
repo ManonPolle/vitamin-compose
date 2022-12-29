@@ -56,13 +56,13 @@ private val MaterialHorizontalPadding = 12.dp
 private val MaterialLeadingIconStartSpacing = 4.dp
 private val MaterialTrailingIconSpacing = 4.dp
 
-fun ChipSizes.horizontalSpacing() =
+internal fun ChipSizes.horizontalSpacing() =
     this.horizontalPadding - MaterialHorizontalPadding
 
-fun ChipSizes.leadingIconStartSpacing() =
+internal fun ChipSizes.leadingIconStartSpacing() =
     this.horizontalIconPadding - MaterialLeadingIconStartSpacing
 
-fun ChipSizes.trailingIconSpacing() =
+internal fun ChipSizes.trailingIconSpacing() =
     this.horizontalIconPadding - MaterialTrailingIconSpacing
 
 object VitaminChipSizes {

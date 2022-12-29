@@ -33,7 +33,7 @@ interface VitaminChipColors : ChipColors {
 }
 
 @Immutable
-private class VitaminDefaultSelectableChipColors(
+internal class VitaminDefaultSelectableChipColors(
     private val backgroundColor: Color,
     private val contentColor: Color,
     private val borderColor: Color,
@@ -94,7 +94,7 @@ private class VitaminDefaultSelectableChipColors(
 }
 
 @Immutable
-private class VitaminDefaultChipColors(
+internal class VitaminDefaultChipColors(
     private val backgroundColor: Color,
     private val contentColor: Color,
     private val borderColor: Color,

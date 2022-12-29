@@ -1,4 +1,4 @@
-package com.decathlon.vitamin.compose.chips.impl
+package com.decathlon.vitamin.compose.chips
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
@@ -17,12 +17,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import com.decathlon.vitamin.compose.chips.ChipSizes
-import com.decathlon.vitamin.compose.chips.VitaminChipColors
-import com.decathlon.vitamin.compose.chips.VitaminChipDefaults
-import com.decathlon.vitamin.compose.chips.VitaminChipSizes
-import com.decathlon.vitamin.compose.chips.horizontalSpacing
-import com.decathlon.vitamin.compose.chips.leadingIconStartSpacing
 import com.decathlon.vitamin.compose.foundation.VitaminTheme
 import com.decathlon.vitamin.compose.foundation.VtmnStatesDisabled
 
